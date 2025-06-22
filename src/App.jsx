@@ -5,13 +5,17 @@ import SideBar from './components/SideBar'
 import Home from './pages/Home'
 import AnalyticsDashboard from './pages/dashboard/AnalyticsDashboard'
 import Order from './pages/Order'
+import Product from './pages/Product'
+import Settings from './pages/Settings'
+import VendorDashboard from './pages/dashboard/VendorDashboard'
+import MenuManagement from './pages/MenuManagement'
 
 const Layout =()=>{
   return(<div>
       <Header />
-      <div className='flex'>
+      <div className='flex '>
         <SideBar />
-        <div className='flex-1 rounded-lg'>
+        <div className='flex-1  rounded-lg'>
           <Outlet />
         </div>
                
@@ -27,6 +31,10 @@ const App = () => {
         <Route index element={<Home />} />
         <Route path='analyticsdashboard' element={<AnalyticsDashboard />}/>
         <Route path='order' element={<Order />}/>
+       <Route path='/product' element={<Product />}/>
+       <Route path='/settings' element={<Settings />}/>
+       <Route path='/vendordashboard' element= {<VendorDashboard />} />
+       <Route path='/menumanagement' element={<MenuManagement />} />
         </Route>
       </Routes>
     </div>

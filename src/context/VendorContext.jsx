@@ -24,8 +24,10 @@ const VendorProvider = ({ children }) => {
     localStorage.setItem('profile', JSON.stringify(profile));
   }, [orders, products, profile]);
 
+  const [menuItems, setMenuItems] = useState([])
+
   return (
-    <VendorContext.Provider value={{ orders, setOrders, products, setProducts, profile, setProfile }}>
+    <VendorContext.Provider value={{ orders, setOrders, products, setProducts, profile, setProfile,menuItems,setMenuItems }}>
       {children}
     </VendorContext.Provider>
   );

@@ -3,7 +3,7 @@ import ChatInterface from './ChatInterface'
 
 const Home = () => {
   return (
-    <div className=''>
+    <div className='bg-gray-200 rounded-lg'>
       <ChatInterface />
     </div>
   )
