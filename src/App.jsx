@@ -3,6 +3,7 @@ import { Route,Router,Outlet, Routes } from 'react-router-dom'
 import Header from './components/Header'
 import SideBar from './components/SideBar'
 import Home from './pages/Home'
+import AnalyticsDashboard from './pages/dashboard/AnalyticsDashboard'
 
 const Layout =()=>{
   return(<div>
@@ -23,6 +24,7 @@ const App = () => {
       <Routes>
         <Route path='/' element={<Layout />}>
         <Route index element={<Home />} />
+        <Route path='analyticsdashboard' element={<AnalyticsDashboard />}/>
 
         </Route>
       </Routes>
