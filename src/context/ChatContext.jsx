@@ -1,69 +1,125 @@
-import React, { createContext, useState } from 'react'
+import React, { createContext, useEffect, useState } from 'react';
+import chatFlow from '../components/chatFlow';
 
 export const ChatContext = createContext();
 
-const ChatProvider = ({ children }) => {
+const ChatsProvider = ({ children }) => {
 
-  const [step, setStep] = useState(1)
-  const [userInput, setUserInput] = useState('')
-  const [messages, setMessages] = useState([
-    {sender:'snapBite', 
-      message:"Welcome to SnapBite Pastries! I'm your personal pastry assistant. I can help you discover and order delicious pastries from local bakers in Port Harcourt.To get started, I'll need to know a bit about your preferences. Is that okay? \n \n1. Yes  \n2. Not Now \n\n Pick an option"
+  // trying to debug, i was having an error saying children componnet cannot be restructured
+  console.log(" ChatsProvider :", children); 
+   
+
+  const defaultWelcomeMessage = [
+    {
+      sender: 'snapBite',
+      message:
+        "Welcome to SnapBite Pastries! I'm your personal pastry assistant. I can help you discover and order delicious pastries from local bakers in Port Harcourt.\n\nTo get started, I'll need to know a bit about your preferences. Is that okay? (Type 'Yes' or 'Not Now') \n\nType Restart to start again",
+    },
+  ];
+
+  const [messages, setMessages] = useState(() => {
+    try {
+      const saved = localStorage.getItem('messages');
+      const parsed = saved ? JSON.parse(saved) : null;
+      if (Array.isArray(parsed) && parsed.some((msg) => msg?.sender && msg?.message)) {
+        return parsed;
+      }
+      localStorage.setItem('messages', JSON.stringify(defaultWelcomeMessage));
+      return defaultWelcomeMessage;
+    } catch {
+      localStorage.setItem('messages', JSON.stringify(defaultWelcomeMessage));
+      return defaultWelcomeMessage;
     }
-  ]);
+  });
 
-  const newMessage =(sender, message)=>{
-    setMessages(prev => [...prev, {sender, message}])
-  }
+  const [userInput, setUserInput] = useState('');
+  const [userData, setUserData] = useState({
+    name: '',
+    location: '',
+    pastryPreference: [],
+    dietaryPreference: '',
+    budget: '',
+  });
+  const [step, setStep] = useState(1);
 
-  const handleSend=()=>{
+  const newMessage = (sender, message) => {
+    setMessages((prev) => [...prev, { sender, message }]);
+  };
 
-    if(!input.trim())
+  useEffect(() => {
+    localStorage.setItem('messages', JSON.stringify(messages));
+  }, [messages]);
+
+  const resetChat = () => {
+    setMessages(defaultWelcomeMessage);
+    setUserInput('');
+    setUserData({
+      name: '',
+      location: '',
+      pastryPreference: [],
+      dietaryPreference: '',
+      budget: '',
+    });
+    setStep(1);
+    localStorage.setItem('messages', JSON.stringify(defaultWelcomeMessage));
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  };
+
+  const handleSend = () => {
+    const input = userInput.trim();
+    if (!input) return;
+
+    newMessage('user', input);
+    setUserInput('');
+
+    //  this function helps user reset
+    if (input.toLowerCase() === 'restart') {
+      newMessage('snapBite', 'Chat has been restarted.');
+      resetChat();
       return;
-
-    newMessage('user',userInput);
-
-    switch(step){
-
-      case 1:
-        if(userInput.toLowerCase() === 'yes' || userInput === 1){
-          newMessage('snapBite',
-            "Great! \n let's set up your profile  First, what's your name?");
-            setStep(2)
-        }
-        else if(userInput.toLowerCase() === 'not now' || userInput === 2){
-          newMessage('snapBite',
-            "Okay, you can come back to set your Profile will you like to make an order?"
-           )
-           userInput.toLowerCase() === 'No' ? newMessage('snapBite', 'Allright') : setStep(9)
-        }
-
-        else
-          newMessage('snapBite', 'Enter a valid response -yes or 1, Not now or 2')
-        break;
-
-
-        case 9:
-          newMessage('snapBite', 'You can place your order');
-
-
-          default: newMessage('snapBite', "No Response")
-
     }
 
-  }
+    const flow = chatFlow[step];
+    if (flow) {
+      const result = flow(input, userData);
 
+      
+      result.messages?.forEach((msg) => newMessage('snapBite', msg));
+
+      
+      if (result.updatedUserData) {
+        setUserData((prev) => ({ ...prev, ...result.updatedUserData }));
+      }
+
+      
+      if (result.nextStep) {
+        setStep(result.nextStep);
+      }
+    } else {
+      newMessage('snapBite', 'Please select an option to continue.');
+    }
+  };
 
   return (
-    <div>
-      <ChatContext.Provider value={{
-                                      messages,setMessages,handleSend,
-                                      userInput,setUserInput,
-                                   }}>
-        {children}
-      </ChatContext.Provider>
-    </div>
-  )
-}
+    <ChatContext.Provider
+      value={{
+        messages,
+        handleSend,
+        userInput,
+        setUserInput,
+        handleKeyDown,
+        userData,
+      }}
+    >
+      {children}
+    </ChatContext.Provider>
+  );
+};
 
-export default ChatProvider
+export default ChatsProvider;

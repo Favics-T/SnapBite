@@ -4,6 +4,7 @@ import Header from './components/Header'
 import SideBar from './components/SideBar'
 import Home from './pages/Home'
 import AnalyticsDashboard from './pages/dashboard/AnalyticsDashboard'
+import Order from './pages/Order'
 
 const Layout =()=>{
   return(<div>
@@ -25,7 +26,7 @@ const App = () => {
         <Route path='/' element={<Layout />}>
         <Route index element={<Home />} />
         <Route path='analyticsdashboard' element={<AnalyticsDashboard />}/>
-
+        <Route path='order' element={<Order />}/>
         </Route>
       </Routes>
     </div>
