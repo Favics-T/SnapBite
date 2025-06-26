@@ -1,3 +1,6 @@
+import { pastries,dietary,popularPastriesNearby } from "../data/meals";
+
+
 
 const chatFlow = {
   1: (input, userData) => {
@@ -9,7 +12,9 @@ const chatFlow = {
     }
     if (input.toLowerCase() === 'not now') {
       return {
-        messages: ["No problem! Whenever you're ready, we’re here to help you discover delicious pastries!"]
+        messages: 
+        ["No problem! Whenever you're ready, we’re here to help you discover delicious pastries!, \n\nyou can go ahead to make your orders now"],
+        nextStep:6
       };
     }
     return {
@@ -34,8 +39,7 @@ const chatFlow = {
   }),
 
   4: (input, userData) => {
-    const pastries = ['Sweet', 'Savory', 'Bread', 'Cakes', 'Cookies', 'Others'];
-    const selected = input.split(',').map(p => p.trim()).filter(p => pastries.includes(p));
+        const selected = input.split(',').map(p => p.trim()).filter(p => pastries.includes(p));
     if (selected.length === 0) {
       return {
         messages: ['Please select at least one valid pastry type from the list.']
@@ -51,8 +55,7 @@ const chatFlow = {
   },
 
   5: (input, userData) => {
-    const dietary = ['None', 'Vegetarian', 'Gluten-Free', 'Sugar-Free', 'Nut-Free', 'Other'];
-    const selected = dietary.find(d => d.toLowerCase() === input.toLowerCase());
+       const selected = dietary.find(d => d.toLowerCase() === input.toLowerCase());
     if (!selected) {
       return {
         messages: ['Please choose a valid dietary preference from the list.']
@@ -90,6 +93,17 @@ const chatFlow = {
         nextStep: 8,
         messages: ["Here are the pastry categories available. Which would you like to explore?\n\n[Cakes] [Breads] [Pastries] [Cookies] [Pies] [Specialty Items]"]
       };
+    }
+
+    else if(input.toLowerCase().includes('popular' || input.toLowerCase()===1)){
+     const pp = popularPastriesNearby.map(p=> `\n\n${p}`);
+     console.log(pp);
+      return{
+                nextStep : 8,
+        messages: [`List of Popular pastries \n\n ${pp}`],
+        nextStep: 9
+      }
+
     }
     return { messages: ["Please type 'Browse by Category' to continue."] };
   },

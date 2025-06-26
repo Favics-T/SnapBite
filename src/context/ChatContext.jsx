@@ -6,7 +6,7 @@ export const ChatContext = createContext();
 const ChatsProvider = ({ children }) => {
 
   // trying to debug, i was having an error saying children componnet cannot be restructured
-  console.log(" ChatsProvider :", children); 
+  // console.log(" ChatsProvider :", children); 
    
 
   const defaultWelcomeMessage = [
@@ -86,6 +86,11 @@ const ChatsProvider = ({ children }) => {
     }
 
     const flow = chatFlow[step];
+   
+
+
+
+
     if (flow) {
       const result = flow(input, userData);
 

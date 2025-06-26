@@ -5,7 +5,9 @@ export const VendorContext = createContext();
 
 const sampleOrders = [
   { id: 1, customer: 'Jane', item: 'Butter Croissant', qty: 3, status: 'Pending' },
-  { id: 2, customer: 'Alex', item: 'Chocolate Danish', qty: 2, status: 'Preparing' }
+  { id: 2, customer: 'Alex', item: 'Chocolate Danish', qty: 2, status: 'Preparing' },
+  { id: 3, customer: 'Jane', item: 'Butter Croissant', qty: 3, status: 'Pending' },
+  { id: 4, customer: 'Alex', item: 'Chocolate Danish', qty: 2, status: 'Preparing' }
 ];
 
 const sampleProducts = [
