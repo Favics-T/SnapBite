@@ -10,10 +10,16 @@ const sampleOrders = [
   { id: 4, customer: 'Alex', item: 'Chocolate Danish', qty: 2, status: 'Preparing' }
 ];
 
+localStorage.removeItem('orders'); 
+localStorage.setItem('orders', JSON.stringify(sampleOrders)); 
+
+
 const sampleProducts = [
   { id: 1, name: 'Butter Croissant', price: 1200 },
   { id: 2, name: 'Chocolate Danish', price: 1500 }
 ];
+
+
 
 const VendorProvider = ({ children }) => {
   const [orders, setOrders] = useState(() => JSON.parse(localStorage.getItem('orders')) || sampleOrders);
